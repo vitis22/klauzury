@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Zvířecí Kvíz</title>
+</head>
+<body>
+    <div id="start-screen">
+        <h1 class="difficulty">Vyberte obtížnost</h1>
+        <button id="easy-button">Lehká</button>
+        <button id="medium-button">Střední</button>
+        <button id="hard-button">Těžká</button>
+    </div>
+
+    <div id="quiz-container" style="display:none;">
+        <h1>Zvířecí Kvíz</h1>
+        <p id="question"></p>
+        <ul id="options" class="options">
+            <li class="option" id="option1"></li>
+            <li class="option" id="option2"></li>
+            <li class="option" id="option3"></li>
+            <li class="option" id="option4"></li>
+        </ul>
+        <button id="next-button">Další otázka</button>
+    </div>
+
+    <script src="javascript.js"></script>
+</body>
+</html>
