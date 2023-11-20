@@ -87,6 +87,10 @@ function loadQuestion() {
         if (currentDifficulty === selectedDifficulty) {
             questionElement.textContent = `(${currentDifficulty}) ${questions[currentQuestion].question}`;
 
+             const questionImage = document.getElementById("question-image");
+            questionImage.src = questions[currentQuestion].image;
+            questionImage.style.display = "block";
+
             const currentOptions = questions[currentQuestion].options;
             for (let i = 0; i < options.length; i++) {
                 if (i < currentOptions.length) {
@@ -141,7 +145,7 @@ function checkAnswer(event) {
 
 
 function showResult() {
-    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${questions.length}.`;
+    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${questions.filter(otazka => otazka.difficulty === selectedDifficulty).length}.`;
     options.forEach(option => option.style.display = "none");
     nextButton.style.display = "none";
 }
