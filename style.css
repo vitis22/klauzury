@@ -57,5 +57,12 @@ li.incorrect {
 }
 
 #quiz-container {
-    margin-top: 300px;
+    margin-top: 200px;
+}
+
+#question-image{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20%;
 }
