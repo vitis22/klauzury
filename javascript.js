@@ -4,7 +4,7 @@ const questions = [
         options: ["Medvěd polární", "Krokodýl", "Tygr", "Slon"],
         answer: 0,
         difficulty: "lehká",
-        image: "panda.jpeg"
+        image: "images/panda.jpeg"
     },
     {
         question: "Jaký pták neumí létat?",
@@ -112,6 +112,17 @@ function loadQuestion() {
 function checkAnswer(event) {
     const selectedOption = event.target;
     const selectedOptionIndex = Array.from(options).indexOf(selectedOption);
+    const correctOptionIndex = questions[currentQuestion].answer;
+
+    for (let i = 0; i < options.length; i++) {
+        options[i].removeEventListener("click", checkAnswer);
+
+        if (i === correctOptionIndex) {
+            options[i].classList.add("correct");
+        } else if (i === selectedOptionIndex) {
+            options[i].classList.add("incorrect");
+        }
+    }
 
     if (selectedOptionIndex === questions[currentQuestion].answer) {
         score++;
@@ -127,8 +138,20 @@ function checkAnswer(event) {
     nextButton.style.display = "block";
 }
 
+
+
 function showResult() {
-    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${questions.length}.`;
+    // Počet správných odpovědí pro vybranou obtížnost
+    const spravneOdpovedi = questions.reduce((pocet, otazka) => {
+        if (otazka.difficulty === selectedDifficulty && otazka.answer === questions.indexOf(otazka.options.find((opt, idx) => idx === otazka.answer))) {
+            return pocet + 1;
+        }
+        return pocet;
+    }, 0);
+
+    // Zobrazení počtu správných odpovědí pro vybranou obtížnost
+    questionElement.textContent = `Váš výsledek: ${spravneOdpovedi} správných odpovědí z ${questions.filter(otazka => otazka.difficulty === selectedDifficulty).length}.`;
+
     options.forEach(option => option.style.display = "none");
     nextButton.style.display = "none";
 }
