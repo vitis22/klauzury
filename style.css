@@ -20,7 +20,7 @@ ul {
 }
 
 li {
-    background-color: #fff;
+    background-color: #fffb;
     border: 1px solid #ddd;
     border-radius: 5px;
     margin: 5px 0;
@@ -66,3 +66,4 @@ li.incorrect {
     margin-right: auto;
     width: 20%;
 }
+
