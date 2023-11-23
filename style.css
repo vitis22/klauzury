@@ -67,3 +67,8 @@ li.incorrect {
     width: 20%;
 }
 
+#next-button {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+}
