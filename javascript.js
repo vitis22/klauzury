@@ -29,9 +29,6 @@ shuffledQuestions.forEach(question => {
 // Vytvořte pole finalQuestions obsahující omezený počet otázek pro každou obtížnost
 const finalQuestions = Object.values(limitedQuestions).flat();
 
-
-
-
 let currentQuestion = 0;
 let score = 0;
 let selectedDifficulty = "";
@@ -52,6 +49,7 @@ difficultyButtons.addEventListener("click", (event) => {
     }
 });
 
+
 function resetQuiz() {
     currentQuestion = 0;
     score = 0;
@@ -59,26 +57,28 @@ function resetQuiz() {
 }
 
 function loadQuestion() {
-    while (currentQuestion < questions.length) {
-        const questionData = questions[currentQuestion];
+    nextButton.style.display = "none"; // Resetování hodnoty tlačítka "Další otázka"
+    while (currentQuestion < finalQuestions.length) {
+        const questionData = finalQuestions[currentQuestion];
         const currentDifficulty = questionData.difficulty;
 
         if (currentDifficulty === selectedDifficulty) {
             updateQuestion(questionData);
-            break; // Oprava: Přerušení cyklu, protože aktuální otázka již odpovídá vybrané obtížnosti
+            break;
         } else {
             currentQuestion++;
         }
     }
 
-    if (currentQuestion === questions.length) {
+    if (currentQuestion === finalQuestions.length) {
         showResult();
     }
 }
 
+
 function updateQuestion(questionData) {
     while (true) {
-        questionElement.textContent = `(${questionData.difficulty}) ${questionData.question}`;
+        questionElement.textContent = `(${questionData.difficulty}) ${questionData.question}`; 
 
         const questionImage = document.getElementById("question-image");
         questionImage.src = `images/${questionData.image}`; // Oprava: Přidáme cestu k adresáři images
@@ -105,7 +105,7 @@ function updateOptions(currentOptions) {
 function checkAnswer(event) {
     const selectedOption = event.target;
     const selectedOptionIndex = Array.from(options).indexOf(selectedOption);
-    const correctOptionIndex = questions[currentQuestion].answer;
+    const correctOptionIndex = finalQuestions[currentQuestion].answer;
 
     for (let i = 0; i < options.length; i++) {
         options[i].removeEventListener("click", checkAnswer);
@@ -117,7 +117,7 @@ function checkAnswer(event) {
         }
     }
 
-    if (selectedOptionIndex === questions[currentQuestion].answer) {
+    if (selectedOptionIndex === finalQuestions[currentQuestion].answer) {
         score++;
         selectedOption.classList.add("correct");
     } else {
@@ -133,8 +133,9 @@ function checkAnswer(event) {
 
 
 
+
 function showResult() {
-    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${questions.filter(otazka => otazka.difficulty === selectedDifficulty).length}.`;
+    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${maxQuestionsPerDifficulty}.`;
     options.forEach(option => option.style.display = "none");
     nextButton.style.display = "none";
 }
