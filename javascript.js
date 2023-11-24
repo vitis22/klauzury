@@ -1,14 +1,20 @@
 // Funkce pro promíchání pole otázek
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+function fisherYatesShuffle(array) {
+    let currentIndex = array.length, randomIndex;
+
+    while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
     }
+
     return array;
 }
 
+
 // Promíchejte otázky v poli
-const shuffledQuestions = shuffleArray(questions);
+const shuffledQuestions = fisherYatesShuffle(questions);
 
 // Omezte počet otázek na 10 pro každou obtížnost
 const maxQuestionsPerDifficulty = 10;
@@ -29,6 +35,27 @@ shuffledQuestions.forEach(question => {
 // Vytvořte pole finalQuestions obsahující omezený počet otázek pro každou obtížnost
 const finalQuestions = Object.values(limitedQuestions).flat();
 
+let timer;
+let elapsedTime = 0;
+const timerElement = document.getElementById("timer");
+
+function startTimer() {
+    timer = setInterval(() => {
+        elapsedTime++;
+        updateTimerDisplay();
+    }, 1000); // Update every second
+}
+
+function stopTimer() {
+    clearInterval(timer);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(elapsedTime / 60);
+    const seconds = elapsedTime % 60;
+    timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
 let currentQuestion = 0;
 let score = 0;
 let selectedDifficulty = "";
@@ -46,6 +73,7 @@ difficultyButtons.addEventListener("click", (event) => {
         startScreen.style.display = "none";
         quizContainer.style.display = "block";
         resetQuiz();
+        startTimer(); // Start the timer when the quiz starts
     }
 });
 
@@ -78,7 +106,7 @@ function loadQuestion() {
 
 function updateQuestion(questionData) {
     while (true) {
-        questionElement.textContent = `(${questionData.difficulty}) ${questionData.question}`; 
+        questionElement.textContent = `(${questionData.difficulty}) ${questionData.question}`;
 
         const questionImage = document.getElementById("question-image");
         questionImage.src = `images/${questionData.image}`; // Oprava: Přidáme cestu k adresáři images
@@ -131,11 +159,14 @@ function checkAnswer(event) {
     nextButton.style.display = "block";
 }
 
-
-
-
 function showResult() {
-    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${maxQuestionsPerDifficulty}.`;
+    stopTimer(); // Stop the timer when the quiz ends
+
+    const minutes = Math.floor(elapsedTime / 60);
+    const seconds = elapsedTime % 60;
+    const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${maxQuestionsPerDifficulty}. Váš kvíz trval: ${formattedTime}.`;
     options.forEach(option => option.style.display = "none");
     nextButton.style.display = "none";
 }
