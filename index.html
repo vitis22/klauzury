@@ -17,8 +17,8 @@
     <div id="quiz-container" style="display:none;">
         <h1>Zvířecí Kvíz</h1>
         <p id="question"></p>
+        <div id="timer"></div>
         <img id="question-image" src="" alt="Obrázek otázky"> 
-        <!--<div id="timer"></div>-->
         <ul id="options" class="options">
             <li class="option" id="option1"></li>
             <li class="option" id="option2"></li>
@@ -26,8 +26,13 @@
             <li class="option" id="option4"></li>
         </ul>
         <button id="next-button">Další otázka</button>
+        <button id="reset-button" style="display:none;">Resetovat kvíz</button>
+        <button id="next-difficulty-button" style="display:none;">Další obtížnost</button>
+        <button id="return-to-menu-button" style="display:none;">Vrátit se do hlavní nabýdky</button>
     </div>
     <script src="otazky.js"></script> 
     <script src="javascript.js"></script>
+
+    
 </body>
 </html>

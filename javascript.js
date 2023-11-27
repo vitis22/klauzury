@@ -12,7 +12,6 @@ function fisherYatesShuffle(array) {
     return array;
 }
 
-
 // Promíchejte otázky v poli
 const shuffledQuestions = fisherYatesShuffle(questions);
 
@@ -66,6 +65,9 @@ const questionElement = document.getElementById("question");
 const options = document.querySelectorAll(".options li");
 const nextButton = document.getElementById("next-button");
 const difficultyButtons = document.getElementById("start-screen");
+const resetButton = document.getElementById("reset-button");
+const nextDifficultyButton = document.getElementById("next-difficulty-button");
+const returnToMenuButton = document.getElementById("return-to-menu-button");
 
 difficultyButtons.addEventListener("click", (event) => {
     if (event.target.tagName === "BUTTON") {
@@ -77,6 +79,40 @@ difficultyButtons.addEventListener("click", (event) => {
     }
 });
 
+resetButton.addEventListener("click", () => {
+    resetQuiz();
+    startTimer();
+    resetTimer();
+});
+
+nextDifficultyButton.addEventListener("click", () => {
+    // Determine the current difficulty
+    const currentDifficultyIndex = ["lehká", "střední", "těžká"].indexOf(selectedDifficulty);
+
+    // Set the next difficulty
+    selectedDifficulty = ["lehká", "střední", "těžká"][(currentDifficultyIndex + 1) % 3];
+
+    startScreen.style.display = "none";
+    quizContainer.style.display = "block";
+
+    resetQuiz(); // Only reset the quiz, don't restart it
+    loadQuestion(); // Load the next question for the new difficulty
+    resetTimer();
+    startTimer();
+});
+
+returnToMenuButton.addEventListener("click", () => {
+    selectedDifficulty = ""; // Reset the selected difficulty
+    startScreen.style.display = "block";
+    quizContainer.style.display = "none";
+    stopTimer();
+    resetTimer();
+});
+
+function resetTimer() {
+    elapsedTime = 0;
+    updateTimerDisplay();
+}
 
 function resetQuiz() {
     currentQuestion = 0;
@@ -86,11 +122,16 @@ function resetQuiz() {
 
 function loadQuestion() {
     nextButton.style.display = "none"; // Resetování hodnoty tlačítka "Další otázka"
+    resetButton.style.display = "none";
+    nextDifficultyButton.style.display = "none";
+    returnToMenuButton.style.display = "none";
+
     while (currentQuestion < finalQuestions.length) {
         const questionData = finalQuestions[currentQuestion];
         const currentDifficulty = questionData.difficulty;
 
         if (currentDifficulty === selectedDifficulty) {
+            timerElement.style.display = "block";
             updateQuestion(questionData);
             break;
         } else {
@@ -102,7 +143,6 @@ function loadQuestion() {
         showResult();
     }
 }
-
 
 function updateQuestion(questionData) {
     while (true) {
@@ -162,13 +202,36 @@ function checkAnswer(event) {
 function showResult() {
     stopTimer(); // Stop the timer when the quiz ends
 
+    resetButton.style.display = "block";
+    nextDifficultyButton.style.display = "block";
+    returnToMenuButton.style.display = "block";
+
+    if (selectedDifficulty !== "těžká") {
+        nextDifficultyButton.style.display = "block";
+    } else {
+        nextDifficultyButton.style.display = "none";
+    }
+
     const minutes = Math.floor(elapsedTime / 60);
     const seconds = elapsedTime % 60;
     const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${maxQuestionsPerDifficulty}. Váš kvíz trval: ${formattedTime}.`;
+    const percentage = (score / maxQuestionsPerDifficulty) * 100;
+    const formattedPercentage = percentage.toFixed(0); // Limit to two decimal places
+
+    questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${maxQuestionsPerDifficulty}. Váš kvíz trval: ${formattedTime}. Celkové procento: ${formattedPercentage}%.`;
+
     options.forEach(option => option.style.display = "none");
     nextButton.style.display = "none";
+
+    const questionImage = document.getElementById("question-image");
+    if (questionImage.style.display !== "none") {
+        questionImage.style.display = "none";
+    }
+
+    if (timerElement.style.display !== "none") {
+        timerElement.style.display = "none";
+    }
 }
 
 loadQuestion();
