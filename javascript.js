@@ -182,9 +182,6 @@ function checkAnswer(event) {
             options[i].classList.add("correct");
         } else if (i === selectedOptionIndex) {
             options[i].classList.add("incorrect", "shake");
-            if (selectedOptionIndex !== correctOptionIndex) {
-                showWrongAnswerOverlay();  // Call showWrongAnswerOverlay only for incorrect answers
-            }
         }
     }
 
@@ -200,25 +197,6 @@ function checkAnswer(event) {
     }
 
     nextButton.style.display = "block";
-}
-
-function showWrongAnswerOverlay() {
-    const body = document.body;
-
-    const wrongAnswerOverlay = document.createElement("div");
-    wrongAnswerOverlay.classList.add("wrong-answer");
-
-    const redCross = document.createElement("div");
-    redCross.classList.add("red-cross");
-    redCross.innerHTML = "&#10060;"; 
-
-    wrongAnswerOverlay.appendChild(redCross);
-
-    body.appendChild(wrongAnswerOverlay);
-
-    setTimeout(() => {
-        body.removeChild(wrongAnswerOverlay);
-    }, 1000); 
 }
 
 function showResult() {
