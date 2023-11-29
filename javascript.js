@@ -58,6 +58,14 @@ function updateTimerDisplay() {
 let currentQuestion = 0;
 let score = 0;
 let selectedDifficulty = "";
+let scoreLehka = 0;
+let scoreStredni = 0;
+let scoreTezka = 0;
+
+// Load scores from localStorage if available
+scoreLehka = parseInt(localStorage.getItem('scoreLehka')) || 0;
+scoreStredni = parseInt(localStorage.getItem('scoreStredni')) || 0;
+scoreTezka = parseInt(localStorage.getItem('scoreTezka')) || 0;
 
 const startScreen = document.getElementById("start-screen");
 const quizContainer = document.getElementById("quiz-container");
@@ -71,11 +79,22 @@ const returnToMenuButton = document.getElementById("return-to-menu-button");
 
 difficultyButtons.addEventListener("click", (event) => {
     if (event.target.tagName === "BUTTON") {
-        selectedDifficulty = event.target.textContent.toLowerCase();
-        startScreen.style.display = "none";
-        quizContainer.style.display = "block";
-        resetQuiz();
-        startTimer(); // Start the timer when the quiz starts
+        const clickedDifficulty = event.target.textContent.toLowerCase();
+
+        // Check if the player can play the selected difficulty
+        if (
+            (clickedDifficulty === "lehká") ||
+            (clickedDifficulty === "střední" && scoreLehka >= 50) ||
+            (clickedDifficulty === "těžká" && scoreStredni >= 50)
+        ) {
+            selectedDifficulty = clickedDifficulty;
+            startScreen.style.display = "none";
+            quizContainer.style.display = "block";
+            resetQuiz();
+            startTimer(); // Start the timer when the quiz starts
+        } else {
+            alert("You need to achieve at least 50% score in the previous difficulty to unlock the next difficulty.");
+        }
     }
 });
 
@@ -218,6 +237,25 @@ function showResult() {
 
     const percentage = (score / maxQuestionsPerDifficulty) * 100;
     const formattedPercentage = percentage.toFixed(0); // Limit to two decimal places
+
+    // Update scores based on difficulty
+    if (selectedDifficulty === "lehká") {
+        scoreLehka = percentage;
+    } else if (selectedDifficulty === "střední") {
+        scoreStredni = percentage;
+    } else if (selectedDifficulty === "těžká") {
+        scoreTezka = percentage;
+    }
+
+    // Save scores to localStorage
+    localStorage.setItem('scoreLehka', scoreLehka);
+    localStorage.setItem('scoreStredni', scoreStredni);
+    localStorage.setItem('scoreTezka', scoreTezka);
+
+    // Display scores on the start screen
+    document.getElementById("easy-score").textContent = `Lehká: ${scoreLehka}%`;
+    document.getElementById("medium-score").textContent = `Střední: ${scoreStredni}%`;
+    document.getElementById("hard-score").textContent = `Těžká: ${scoreTezka}%`;
 
     questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${maxQuestionsPerDifficulty}. Váš kvíz trval: ${formattedTime}. Celkové procento: ${formattedPercentage}%.`;
 
