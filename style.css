@@ -60,11 +60,9 @@ li.incorrect {
 }
 .button{
     display: flex;
+    justify-content: center;
   }
 
-#reset-button{
-    margin-left: 455px;
-}
 
 #results {
     text-align: center;
