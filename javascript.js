@@ -61,11 +61,18 @@ let selectedDifficulty = "";
 let scoreLehka = 0;
 let scoreStredni = 0;
 let scoreTezka = 0;
+let highestScoreLehka = 0;
+let highestScoreStredni = 0;
+let highestScoreTezka = 0;
 
 // Load scores from localStorage if available
 scoreLehka = parseInt(localStorage.getItem('scoreLehka')) || 0;
 scoreStredni = parseInt(localStorage.getItem('scoreStredni')) || 0;
 scoreTezka = parseInt(localStorage.getItem('scoreTezka')) || 0;
+
+highestScoreLehka = parseInt(localStorage.getItem('highestScoreLehka')) || 0;
+highestScoreStredni = parseInt(localStorage.getItem('highestScoreStredni')) || 0;
+highestScoreTezka = parseInt(localStorage.getItem('highestScoreTezka')) || 0;
 
 const startScreen = document.getElementById("start-screen");
 const quizContainer = document.getElementById("quiz-container");
@@ -84,8 +91,8 @@ difficultyButtons.addEventListener("click", (event) => {
         // Check if the player can play the selected difficulty
         if (
             (clickedDifficulty === "lehká") ||
-            (clickedDifficulty === "střední" && scoreLehka >= 50) ||
-            (clickedDifficulty === "těžká" && scoreStredni >= 50)
+            (clickedDifficulty === "střední" && highestScoreLehka >= 50) ||
+            (clickedDifficulty === "těžká" && highestScoreStredni >= 50)
         ) {
             selectedDifficulty = clickedDifficulty;
             startScreen.style.display = "none";
@@ -241,21 +248,24 @@ function showResult() {
     // Update scores based on difficulty
     if (selectedDifficulty === "lehká") {
         scoreLehka = percentage;
+        highestScoreLehka = Math.max(percentage, highestScoreLehka);
     } else if (selectedDifficulty === "střední") {
         scoreStredni = percentage;
+        highestScoreStredni = Math.max(percentage, highestScoreStredni);
     } else if (selectedDifficulty === "těžká") {
         scoreTezka = percentage;
+        highestScoreTezka = Math.max(percentage, highestScoreTezka);
     }
 
-    // Save scores to localStorage
-    localStorage.setItem('scoreLehka', scoreLehka);
-    localStorage.setItem('scoreStredni', scoreStredni);
-    localStorage.setItem('scoreTezka', scoreTezka);
+    localStorage.setItem('highestScoreLehka', highestScoreLehka);
+    localStorage.setItem('highestScoreStredni', highestScoreStredni);
+    localStorage.setItem('highestScoreTezka', highestScoreTezka);
 
     // Display scores on the start screen
-    document.getElementById("easy-score").textContent = `Lehká: ${scoreLehka}%`;
-    document.getElementById("medium-score").textContent = `Střední: ${scoreStredni}%`;
-    document.getElementById("hard-score").textContent = `Těžká: ${scoreTezka}%`;
+    document.getElementById("easy-score").textContent = `Lehká: ${scoreLehka}% (Nejvyšší skóre: ${highestScoreLehka}%)`;
+    document.getElementById("medium-score").textContent = `Střední: ${scoreStredni}% (Nejvyšší skóre: ${highestScoreStredni}%)`;
+    document.getElementById("hard-score").textContent = `Těžká: ${scoreTezka}% (Nejvyšší skóre: ${highestScoreTezka}%)`;
+
 
     questionElement.textContent = `Váš výsledek: ${score} správných odpovědí z ${maxQuestionsPerDifficulty}. Váš kvíz trval: ${formattedTime}. Celkové procento: ${formattedPercentage}%.`;
 
