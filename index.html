@@ -7,6 +7,25 @@
     <title>Zvířecí Kvíz</title>
 </head>
 <body>
+
+        <!-- Registration Section -->
+        <div id="registration-section" style="display: block;">
+            <h1>Registration</h1>
+            <label for="reg-username">Username:</label>
+            <input type="text" id="reg-username" placeholder="Enter your username">
+            <br>
+            <label for="reg-password">Password:</label>
+            <input type="password" id="reg-password" placeholder="Enter your password">
+            <br>
+            <button onclick="register()">Register</button>
+        </div>
+    
+        <!-- Display Result Section -->
+        <div id="result-section" style="display: none;">
+            <h1>Result</h1>
+            <p id="result-message"></p>
+        </div>
+
     <div id="start-screen">
         <h1 class="difficulty">Vyberte obtížnost</h1>
         <p id="easy-score">Lehká: 0%</p>

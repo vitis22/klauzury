@@ -84,24 +84,62 @@ const resetButton = document.getElementById("reset-button");
 const nextDifficultyButton = document.getElementById("next-difficulty-button");
 const returnToMenuButton = document.getElementById("return-to-menu-button");
 
-difficultyButtons.addEventListener("click", (event) => {
-    if (event.target.tagName === "BUTTON") {
-        const clickedDifficulty = event.target.textContent.toLowerCase();
+// Sample User Class
+class User {
+    constructor(userID, username, password) {
+        this.userID = userID;
+        this.username = username;
+        this.password = password;
+    }
+}
 
-        // Check if the player can play the selected difficulty
-        if (
-            (clickedDifficulty === "lehká") ||
-            (clickedDifficulty === "střední" && highestScoreLehka >= 50) ||
-            (clickedDifficulty === "těžká" && highestScoreStredni >= 50)
-        ) {
-            selectedDifficulty = clickedDifficulty;
-            startScreen.style.display = "none";
-            quizContainer.style.display = "block";
-            resetQuiz();
-            startTimer(); // Start the timer when the quiz starts
-        } else {
-            alert("You need to achieve at least 50% score in the previous difficulty to unlock the next difficulty.");
+// Sample Users Database
+const usersDB = [];
+
+let userRegistered = false; // New variable to track user registration status
+
+function register() {
+    const regUsername = document.getElementById("reg-username").value;
+    const regPassword = document.getElementById("reg-password").value;
+
+    if (regUsername && regPassword) {
+        // Reset highest scores on registration
+        highestScoreLehka = 0;
+        highestScoreStredni = 0;
+        highestScoreTezka = 0;
+
+        const newUser = new User(usersDB.length + 1, regUsername, regPassword);
+        usersDB.push(newUser);
+        userRegistered = true; // Set userRegistered to true after successful registration
+        displayResult("Registration successful!");
+    } else {
+        displayResult("Please enter both username and password for registration.");
+    }
+}
+
+
+difficultyButtons.addEventListener("click", (event) => {
+    if (userRegistered) {
+        if (event.target.tagName === "BUTTON") {
+            const clickedDifficulty = event.target.textContent.toLowerCase();
+
+            // Check if the player can play the selected difficulty
+            if (
+                (clickedDifficulty === "lehká") ||
+                (clickedDifficulty === "střední" && highestScoreLehka >= 50) ||
+                (clickedDifficulty === "těžká" && highestScoreStredni >= 50)
+            ) {
+                selectedDifficulty = clickedDifficulty;
+                startScreen.style.display = "none";
+                quizContainer.style.display = "block";
+                resetQuiz();
+                startTimer(); // Start the timer when the quiz starts
+            } else {
+                alert("You need to achieve at least 50% score in the previous difficulty to unlock the next difficulty.");
+            }
         }
+    } else {
+        alert("Please register to play the quiz.");
     }
 });
 
