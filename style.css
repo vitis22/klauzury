@@ -100,3 +100,51 @@ li.incorrect {
       transform: translateX(5px);
     }
   }
+
+  /* Add this to your existing CSS file or create a new one */
+.icon-image {
+    width: 50px; /* Adjust the width as needed */
+    height: auto; /* Automatically adjust the height to maintain the aspect ratio */
+    margin: 5px; /* Add some margin for spacing between images */
+}
+
+#icon-container {
+    max-width: 50px; /* Set a maximum width for the icon container */
+    max-height: 50px; /* Set a maximum height for the icon container */
+}
+
+#player-name-container {
+    position: absolute;
+    top: 20px;
+    left: 70px; /* Adjust the left position as needed */
+    font-size: 35px; /* Adjust the font size as needed */
+    color: #333; /* Adjust the text color as needed */
+}
+
+#icon-setup-box {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.icon-box{
+    display: none;
+    position: absolute;
+    top: 12%; 
+    left: 10%; 
+    transform: translate(-50%, -50%);
+}
+
+    /* Add this style to set the maximum width and height for the icon images */
+    #icon-options img {
+        max-width: 50px; /* Adjust this value to your preference */
+        max-height: 50px; /* Adjust this value to your preference */
+    }
+
+    /* Add this style to set the maximum width and height for the player icon image */
+    #player-icon {
+        max-width: 50px; /* Adjust this value to your preference */
+        max-height: 50px; /* Adjust this value to your preference */
+    }

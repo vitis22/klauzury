@@ -8,23 +8,34 @@
 </head>
 <body>
 
-        <!-- Registration Section -->
-        <div id="registration-section" style="display: block;">
-            <h1>Registration</h1>
-            <label for="reg-username">Username:</label>
-            <input type="text" id="reg-username" placeholder="Enter your username">
-            <br>
-            <label for="reg-password">Password:</label>
-            <input type="password" id="reg-password" placeholder="Enter your password">
-            <br>
-            <button onclick="register()">Register</button>
-        </div>
-    
-        <!-- Display Result Section -->
-        <div id="result-section" style="display: none;">
-            <h1>Result</h1>
-            <p id="result-message"></p>
-        </div>
+    <!-- Add this div for the icon container -->
+    <div id="icon-container"></div>
+
+    <!-- Add this button for the icon setup in the top left corner -->
+    <button id="icon-setup-button" onclick="showIconSetup()" style="position: absolute; top: 10px; left: 10px;">Icon Setup</button>
+
+    <!-- Add this div for the change player button -->
+    <div id="change-player-button" style="display: none; position: absolute; top: 60px; left: 10px;">
+        <button onclick="showIconSetup()">Změnit hráče</button>
+    </div>
+
+    <!-- Add this div for the player's name -->
+    <div id="player-name-container">
+        <span id="player-name"></span>
+    </div>
+
+<!-- Add this div for the icon setup box with updated styles -->
+<div id="icon-setup-box" class="icon-box">
+    <p>Select an icon:</p>
+    <ul id="icon-options" class="options">
+        <img src="images/monkey.png" alt="" class="icon-image" onclick="selectIcon(this)">
+        <img src="images/lion.png" alt="" class="icon-image" onclick="selectIcon(this)">
+        <img src="images/pig.png" alt="" class="icon-image" onclick="selectIcon(this)">
+        <img src="images/tiger.png" alt="" class="icon-image" onclick="selectIcon(this)">
+    </ul>
+    <input type="text" id="icon-name-input" placeholder="Enter icon name">
+    <button onclick="confirmIcon()">Confirm</button>
+</div>
 
     <div id="start-screen">
         <h1 class="difficulty">Vyberte obtížnost</h1>

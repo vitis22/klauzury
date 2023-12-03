@@ -1,3 +1,124 @@
+let selectedIcon = ""; // Variable to store the selected icon
+let playerName = "";   // Variable to store the player's chosen name
+
+function showIconSetup() {
+    selectedIcon = ""; // Reset the selected icon
+    playerName = "";   // Reset the player name
+
+    // Clear the input field
+    document.getElementById("icon-name-input").value = "";
+
+    document.getElementById("icon-setup-box").style.display = "block";
+    document.getElementById("icon-setup-button").style.display = "none";
+    document.getElementById("change-player-button").style.display = "none";
+    clearIconSelection(); // Add this line to clear the icon selection
+}
+
+function clearIconSelection() {
+    // Reset styles of all images
+    const iconImages = document.querySelectorAll("#icon-options img");
+    iconImages.forEach(img => img.style.border = "none");
+}
+function selectIcon(clickedImage) {
+    // Reset styles of all images
+    const iconImages = document.querySelectorAll("#icon-options img");
+    iconImages.forEach(img => img.style.border = "none");
+
+    // Set the selected icon and visually indicate selection
+    selectedIcon = clickedImage.src;
+    clickedImage.style.border = "2px solid blue";
+}
+
+function confirmIcon() {
+    playerName = document.getElementById("icon-name-input").value;
+    if (playerName.trim() !== "" && selectedIcon !== "") {
+        // Reset the scores when the player changes the icon and name
+        scoreLehka = 0;
+        scoreStredni = 0;
+        scoreTezka = 0;
+
+        // Reset the highest scores when the player changes the icon and name
+        highestScoreLehka = 0;
+        highestScoreStredni = 0;
+        highestScoreTezka = 0;
+        // Create the icon in the upper left corner with the chosen name
+        createPlayerIcon(playerName, selectedIcon);
+
+        // Save selected icon and player name to localStorage
+        localStorage.setItem('selectedIcon', selectedIcon);
+        localStorage.setItem('playerName', playerName);
+        // Save the reset scores and highest scores to localStorage
+        localStorage.setItem('scoreLehka', scoreLehka);
+        localStorage.setItem('scoreStredni', scoreStredni);
+        localStorage.setItem('scoreTezka', scoreTezka);
+        localStorage.setItem('highestScoreLehka', highestScoreLehka);
+        localStorage.setItem('highestScoreStredni', highestScoreStredni);
+        localStorage.setItem('highestScoreTezka', highestScoreTezka);
+        // Display scores on the start screen
+        document.getElementById("easy-score").textContent = `Lehká: ${scoreLehka}% (Nejvyšší skóre: ${highestScoreLehka}%)`;
+        document.getElementById("medium-score").textContent = `Střední: ${scoreStredni}% (Nejvyšší skóre: ${highestScoreStredni}%)`;
+        document.getElementById("hard-score").textContent = `Těžká: ${scoreTezka}% (Nejvyšší skóre: ${highestScoreTezka}%)`;
+
+        // Hide the icon setup box
+        document.getElementById("icon-setup-box").style.display = "none";
+        // Reset selectedIcon to avoid potential issues
+        selectedIcon = "";
+
+        // Enable the "Start" button
+        document.getElementById("start-button").disabled = false;
+    } else {
+        alert("Please select an icon and enter a name for your player.");
+    }
+}
+
+
+function createPlayerIcon(name, iconData) {
+    // Try to find the icon container
+    let iconContainer = document.getElementById("icon-container");
+
+    // If the icon container doesn't exist, create it dynamically
+    if (!iconContainer) {
+        iconContainer = document.createElement("div");
+        iconContainer.id = "icon-container";
+        document.body.appendChild(iconContainer);
+    }
+
+    // Display the icon container
+    iconContainer.style.display = "block";
+
+    // Set the icon source and alt text
+    let playerIcon = document.getElementById("player-icon");
+
+    // If playerIcon doesn't exist, create it dynamically
+    if (!playerIcon) {
+        playerIcon = document.createElement("img");
+        playerIcon.id = "player-icon";
+        iconContainer.appendChild(playerIcon);
+    }
+
+    playerIcon.src = iconData;
+    playerIcon.alt = name;
+
+    // Display the player's chosen name next to the icon
+    const playerNameElement = document.getElementById("player-name");
+    if (!playerNameElement) {
+        // If playerNameElement doesn't exist, create it dynamically
+        const newPlayerNameElement = document.createElement("span");
+        newPlayerNameElement.id = "player-name";
+        iconContainer.appendChild(newPlayerNameElement);
+    }
+
+    playerNameElement.textContent = name;
+
+    // Save selected icon and player name to localStorage
+    localStorage.setItem('selectedIcon', iconData);
+    localStorage.setItem('playerName', name);
+
+    // Show the "Icon Setup" button and hide the "Change Player" button
+    document.getElementById("icon-setup-button").style.display = "none";
+    document.getElementById("change-player-button").style.display = "block";
+}
+
 // Funkce pro promíchání pole otázek
 function fisherYatesShuffle(array) {
     let currentIndex = array.length, randomIndex;
@@ -84,45 +205,16 @@ const resetButton = document.getElementById("reset-button");
 const nextDifficultyButton = document.getElementById("next-difficulty-button");
 const returnToMenuButton = document.getElementById("return-to-menu-button");
 
-// Sample User Class
-class User {
-    constructor(userID, username, password) {
-        this.userID = userID;
-        this.username = username;
-        this.password = password;
-    }
+function showAlert() {
+    alert("Please choose your icon and enter your name before starting the quiz.");
 }
-
-// Sample Users Database
-const usersDB = [];
-
-let userRegistered = false; // New variable to track user registration status
-
-function register() {
-    const regUsername = document.getElementById("reg-username").value;
-    const regPassword = document.getElementById("reg-password").value;
-
-    if (regUsername && regPassword) {
-        // Reset highest scores on registration
-        highestScoreLehka = 0;
-        highestScoreStredni = 0;
-        highestScoreTezka = 0;
-
-        const newUser = new User(usersDB.length + 1, regUsername, regPassword);
-        usersDB.push(newUser);
-        userRegistered = true; // Set userRegistered to true after successful registration
-        displayResult("Registration successful!");
-    } else {
-        displayResult("Please enter both username and password for registration.");
-    }
-}
-
 
 difficultyButtons.addEventListener("click", (event) => {
-    if (userRegistered) {
-        if (event.target.tagName === "BUTTON") {
-            const clickedDifficulty = event.target.textContent.toLowerCase();
+    if (event.target.tagName === "BUTTON") {
+        const clickedDifficulty = event.target.textContent.toLowerCase();
 
+        // Check if the player has chosen an icon and name
+        if (localStorage.getItem('selectedIcon') && localStorage.getItem('playerName')) {
             // Check if the player can play the selected difficulty
             if (
                 (clickedDifficulty === "lehká") ||
@@ -137,9 +229,9 @@ difficultyButtons.addEventListener("click", (event) => {
             } else {
                 alert("You need to achieve at least 50% score in the previous difficulty to unlock the next difficulty.");
             }
+        } else {
+            showAlert();
         }
-    } else {
-        alert("Please register to play the quiz.");
     }
 });
 
@@ -181,6 +273,7 @@ function resetTimer() {
 function resetQuiz() {
     currentQuestion = 0;
     score = 0;
+    options.forEach(option => option.classList.remove('shake'));
     loadQuestion();
 }
 
@@ -189,6 +282,16 @@ function loadQuestion() {
     resetButton.style.display = "none";
     nextDifficultyButton.style.display = "none";
     returnToMenuButton.style.display = "none";
+
+    const savedIcon = localStorage.getItem('selectedIcon');
+    const savedName = localStorage.getItem('playerName');
+
+    if (savedIcon && savedName) {
+        // If there are saved icon and name, display them
+        createPlayerIcon(savedName, savedIcon);
+        // Clear the icon selection to avoid confusion
+        clearIconSelection();
+    }
 
     while (currentQuestion < finalQuestions.length) {
         const questionData = finalQuestions[currentQuestion];
@@ -241,11 +344,15 @@ function checkAnswer(event) {
 
     for (let i = 0; i < options.length; i++) {
         options[i].removeEventListener("click", checkAnswer);
+        options[i].classList.remove("shake"); // Remove shake class from all options
 
         if (i === correctOptionIndex) {
             options[i].classList.add("correct");
         } else if (i === selectedOptionIndex) {
-            options[i].classList.add("incorrect", "shake");
+            // Use setTimeout to delay the addition of the shake class
+            setTimeout(() => {
+                options[i].classList.add("incorrect", "shake");
+            }, 1);
         }
     }
 
@@ -256,6 +363,7 @@ function checkAnswer(event) {
         selectedOption.classList.add("incorrect");
     }
 
+    // Remove event listeners after adding classes
     for (let i = 0; i < options.length; i++) {
         options[i].removeEventListener("click", checkAnswer);
     }
