@@ -308,6 +308,11 @@ function loadQuestion() {
 
     if (currentQuestion === finalQuestions.length) {
         showResult();
+        // Show the "Change Player" button when the quiz is completed
+        document.getElementById("change-player-button").style.display = "block";
+    } else {
+        // Hide the "Change Player" button during the quiz
+        document.getElementById("change-player-button").style.display = "none";
     }
 }
 
@@ -391,6 +396,12 @@ function showResult() {
     const percentage = (score / maxQuestionsPerDifficulty) * 100;
     const formattedPercentage = percentage.toFixed(0); // Limit to two decimal places
 
+    if (percentage <= 50){
+        nextDifficultyButton.style.display = "none"
+    } else {
+        nextDifficultyButton.style.display = "block"
+    }
+
     // Update scores based on difficulty
     if (selectedDifficulty === "lehká") {
         scoreLehka = percentage;
@@ -406,6 +417,10 @@ function showResult() {
     localStorage.setItem('highestScoreLehka', highestScoreLehka);
     localStorage.setItem('highestScoreStredni', highestScoreStredni);
     localStorage.setItem('highestScoreTezka', highestScoreTezka);
+
+    localStorage.setItem(`scoreLehka`, scoreLehka);
+    localStorage.setItem(`scoreStredni`, scoreStredni);
+    localStorage.setItem(`scoreTezka`, scoreTezka);
 
     // Display scores on the start screen
     document.getElementById("easy-score").textContent = `Lehká: ${scoreLehka}% (Nejvyšší skóre: ${highestScoreLehka}%)`;
