@@ -58,6 +58,20 @@ li.incorrect {
     display: block; /* Change display property to block for vertical alignment */
     margin: 10px; /* Center the buttons horizontally */
 }
+
+#extreme-button{
+    margin: 20px;
+    padding: 20px;
+    font-size: 24px;
+    display: block; /* Change display property to block for vertical alignment */
+    margin: 10px; /* Center the buttons horizontally */
+}
+
+.button-extreme{
+    display: flex;
+    justify-content: center;
+}
+
 .button{
     display: flex;
     justify-content: center;

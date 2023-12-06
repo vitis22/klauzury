@@ -47,6 +47,20 @@
         <button id="hard-button">Těžká</button>
     </div>
 
+ <!-- Add this div for extreme mode elements -->
+<div id="extreme-mode-container" style="display:none;">
+    <p id="extreme-question"></p>
+    <div id="extreme-options">
+        <!-- Extreme mode pictures will be displayed here -->
+    </div>
+    <input type="text" id="extreme-input" placeholder="Enter your answer">
+    <button onclick="checkExtremeAnswer()">Submit</button>
+</div>
+
+<div class="button-extreme">
+    <button id="extreme-button">Extra těžká</button>
+</div>
+
     <div id="quiz-container" style="display:none;">
         <h1>Zvířecí Kvíz</h1>
         <p id="question"></p>
@@ -66,8 +80,7 @@
         </div>
     </div>
     <script src="otazky.js"></script> 
-    <script src="javascript.js"></script>
-
-    
+    <script src="otazky_extreme.js"></script>
+    <script src="javascript.js"></script>    
 </body>
 </html>

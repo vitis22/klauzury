@@ -185,6 +185,9 @@ let scoreTezka = 0;
 let highestScoreLehka = 0;
 let highestScoreStredni = 0;
 let highestScoreTezka = 0;
+let extremeAttempts = 0;
+let wrongAnswersCount = 0; // Variable to keep track of wrong answers
+let currentPuzzleIndex = 0;
 
 // Load scores from localStorage if available
 scoreLehka = parseInt(localStorage.getItem('scoreLehka')) || 0;
@@ -204,6 +207,126 @@ const difficultyButtons = document.getElementById("start-screen");
 const resetButton = document.getElementById("reset-button");
 const nextDifficultyButton = document.getElementById("next-difficulty-button");
 const returnToMenuButton = document.getElementById("return-to-menu-button");
+
+
+
+function showExtremeMode() {
+    // Reset extreme mode variables
+    currentPuzzleIndex = 0;
+    wrongAnswersCount = 0;
+
+    // Check if the player has met the criteria to unlock Extra Hard
+    if (highestScoreLehka >= 50 && highestScoreTezka >= 50) {
+        // Hide quiz container and show extreme mode container
+        document.getElementById("extreme-button").style.display = "none";
+        document.getElementById("start-screen").style.display = "none";
+        document.getElementById("quiz-container").style.display = "none";
+        document.getElementById("extreme-mode-container").style.display = "block";
+
+        // Load the first question for extreme mode
+        loadExtremeQuestion();
+    } else {
+        // Alert the player that they need to achieve at least 50% in Lehka and Tezka difficulties
+        alert("You need to achieve at least 50% score in both Lehká and Těžká difficulties to unlock Extra Hard.");
+    }
+}
+
+function loadExtremeQuestion() {
+    // Reset input field
+    document.getElementById("extreme-input").value = "";
+
+    // Get the next extreme mode question
+    const currentExtremeQuestion = getCurrentExtremeQuestion();
+
+    // Display the extreme mode question
+    document.getElementById("extreme-question").textContent = currentExtremeQuestion.question;
+
+    // Display the extreme mode options (pictures)
+    displayExtremeOptions(currentExtremeQuestion.options);
+}
+
+// Define getExtremeModeQuestion function
+function getExtremeModeQuestion() {
+    // Ensure that currentPuzzleIndex is within the bounds of the extremePuzzles array
+    const currentExtremeQuestion = getCurrentExtremeQuestion();
+    return currentExtremeQuestion;
+}
+
+function displayExtremeOptions(options) {
+    // Clear previous options
+    const extremeOptionsContainer = document.getElementById("extreme-options");
+    extremeOptionsContainer.innerHTML = "";
+
+    // Display new options (pictures)
+    options.forEach((option, index) => {
+        const imgElement = document.createElement("img");
+        imgElement.src = `images/${option}`;
+        imgElement.alt = `Option ${index + 1}`;
+        extremeOptionsContainer.appendChild(imgElement);
+    });
+}
+
+function checkExtremeAnswer() {
+    // Call getExtremeModeQuestion here if needed
+    const currentExtremeQuestion = getExtremeModeQuestion();
+
+    const userInput = document.getElementById("extreme-input").value.toLowerCase();
+    const correctAnswer = getExtremeModeCorrectAnswer();
+
+    if (userInput === correctAnswer) {
+        // Player guessed the correct answer, return to the main menu
+        document.getElementById("start-screen").style.display = "block";
+        document.getElementById("extreme-button").style.display = "block";
+        document.getElementById("extreme-mode-container").style.display = "none";
+    } else {
+        // Player guessed the wrong answer
+        wrongAnswersCount++;
+
+        if (wrongAnswersCount % 3 === 0) {
+            // Player has given three wrong answers, display the next picture as a hint
+            displayNextExtremePicture();
+        }
+    }
+}
+
+function getRandomExtremeQuestion() {
+    const randomIndex = Math.floor(Math.random() * extremePuzzles.length);
+    return extremePuzzles[randomIndex];
+}
+
+function getCurrentExtremeQuestion() {
+    return getRandomExtremeQuestion();
+}
+
+function displayNextExtremePicture() {
+    const currentExtremeQuestion = getCurrentExtremeQuestion();
+
+    // Display the next picture only if the wrong answers count is a multiple of 3 and less than the number of clues
+    if (wrongAnswersCount % 3 === 0 && wrongAnswersCount / 3 < currentExtremeQuestion.clues.length) {
+        const currentClueIndex = Math.floor(wrongAnswersCount / 3);
+        const currentExtremePicture = currentExtremeQuestion.clues[currentClueIndex];
+
+        // Display the next picture (you can customize this based on your HTML structure)
+        const pictureContainer = document.getElementById("extreme-options");
+        const imgElement = document.createElement("img");
+        imgElement.src = `images/${currentExtremePicture}`;
+        imgElement.alt = `Hint ${currentClueIndex + 1}`;
+        pictureContainer.appendChild(imgElement);
+    }
+}
+
+
+function getExtremeModeCorrectAnswer() {
+    // Get the current extreme mode question
+    const currentExtremeQuestion = getExtremeModeQuestion();
+
+    // Return the correct answer for the current extreme mode question
+    return currentExtremeQuestion.correctAnswer;
+}
+
+// Add an event listener to the extreme mode button
+document.getElementById("extreme-button").addEventListener("click", showExtremeMode);
+
 
 function showAlert() {
     alert("Please choose your icon and enter your name before starting the quiz.");
@@ -396,7 +519,7 @@ function showResult() {
     const percentage = (score / maxQuestionsPerDifficulty) * 100;
     const formattedPercentage = percentage.toFixed(0); // Limit to two decimal places
 
-    if (percentage <= 50){
+    if (percentage <= 50) {
         nextDifficultyButton.style.display = "none"
     } else {
         nextDifficultyButton.style.display = "block"
