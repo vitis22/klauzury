@@ -8,24 +8,26 @@
 </head>
 <body>
 
-    <!-- Add this div for the icon container -->
+    <div id="cross-button" style="display:none; position: absolute; top: 10px; right: 10px; cursor: pointer;">
+        <img src="images/cross.png" alt="Cross" width="20" height="20">
+    </div>
+
     <div id="icon-container"></div>
 
-    <!-- Add this button for the icon setup in the top left corner -->
-    <button id="icon-setup-button" onclick="showIconSetup()" style="position: absolute; top: 10px; left: 10px;">Icon Setup</button>
+    <button id="icon-button" onclick="showIconSetup()" style="position: absolute; top: 10px; left: 10px;">Zadat hráče</button>
 
-    <!-- Add this div for the change player button -->
-    <div id="change-player-button" style="display: none; position: absolute; top: 60px; left: 10px;">
+    <div id="change-button" style="display: none; position: absolute; top: 60px; left: 10px;">
         <button onclick="showIconSetup()">Změnit hráče</button>
     </div>
 
-    <!-- Add this div for the player's name -->
     <div id="player-name-container">
         <span id="player-name"></span>
     </div>
 
-<!-- Add this div for the icon setup box with updated styles -->
-<div id="icon-setup-box" class="icon-box">
+<div id="icon-box" class="icon-boxx">
+    <div id="cross-icone" style="display:none;">
+        <img src="images/cross.png" alt="Cross" width="20" height="20">
+    </div>
     <p>Select an icon:</p>
     <ul id="icon-options" class="options">
         <img src="images/monkey.png" alt="" class="icon-image" onclick="selectIcon(this)">
@@ -33,7 +35,7 @@
         <img src="images/pig.png" alt="" class="icon-image" onclick="selectIcon(this)">
         <img src="images/tiger.png" alt="" class="icon-image" onclick="selectIcon(this)">
     </ul>
-    <input type="text" id="icon-name-input" placeholder="Enter icon name">
+    <input type="text" id="icon-input" placeholder="Enter icon name">
     <button onclick="confirmIcon()">Confirm</button>
 </div>
 
@@ -47,11 +49,10 @@
         <button id="hard-button">Těžká</button>
     </div>
 
- <!-- Add this div for extreme mode elements -->
-<div id="extreme-mode-container" style="display:none;">
+<div id="extreme-container" style="display:none;">
     <p id="extreme-question"></p>
     <div id="extreme-options">
-        <!-- Extreme mode pictures will be displayed here -->
+
     </div>
     <input type="text" id="extreme-input" placeholder="Enter your answer">
     <button onclick="checkExtremeAnswer()">Submit</button>

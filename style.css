@@ -55,16 +55,16 @@ li.incorrect {
     margin: 20px;
     padding: 20px;
     font-size: 24px;
-    display: block; /* Change display property to block for vertical alignment */
-    margin: 10px; /* Center the buttons horizontally */
+    display: block;
+    margin: 10px; 
 }
 
 #extreme-button{
     margin: 20px;
     padding: 20px;
     font-size: 24px;
-    display: block; /* Change display property to block for vertical alignment */
-    margin: 10px; /* Center the buttons horizontally */
+    display: block;
+    margin: 10px; 
 }
 
 .button-extreme{
@@ -80,7 +80,7 @@ li.incorrect {
 
 #results {
     text-align: center;
-    margin-top: 20px; /* Adjust the margin as needed */
+    margin-top: 20px;
 }
 
 #quiz-container {
@@ -92,7 +92,13 @@ li.incorrect {
     margin-left: auto;
     margin-right: auto;
     width: 20%;
+    object-fit: contain;    
 }
+
+#extreme-container{
+    margin-top: 200px;
+}
+
 #next-button {
     position: fixed;
     left: 50%;
@@ -115,27 +121,26 @@ li.incorrect {
     }
   }
 
-  /* Add this to your existing CSS file or create a new one */
 .icon-image {
-    width: 50px; /* Adjust the width as needed */
-    height: auto; /* Automatically adjust the height to maintain the aspect ratio */
-    margin: 5px; /* Add some margin for spacing between images */
+    width: 50px; 
+    height: auto; 
+    margin: 5px; 
 }
 
 #icon-container {
-    max-width: 50px; /* Set a maximum width for the icon container */
-    max-height: 50px; /* Set a maximum height for the icon container */
+    max-width: 50px; 
+    max-height: 50px; 
 }
 
 #player-name-container {
     position: absolute;
     top: 20px;
-    left: 70px; /* Adjust the left position as needed */
-    font-size: 35px; /* Adjust the font size as needed */
-    color: #333; /* Adjust the text color as needed */
+    left: 70px; 
+    font-size: 35px;
+    color: #333; 
 }
 
-#icon-setup-box {
+#icon-box {
     text-align: center;
     padding: 20px;
     background-color: #fff;
@@ -143,7 +148,7 @@ li.incorrect {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.icon-box{
+.icon-boxx {
     display: none;
     position: absolute;
     top: 12%; 
@@ -151,14 +156,12 @@ li.incorrect {
     transform: translate(-50%, -50%);
 }
 
-    /* Add this style to set the maximum width and height for the icon images */
     #icon-options img {
-        max-width: 50px; /* Adjust this value to your preference */
-        max-height: 50px; /* Adjust this value to your preference */
+        max-width: 50px; 
+        max-height: 50px; 
     }
 
-    /* Add this style to set the maximum width and height for the player icon image */
     #player-icon {
-        max-width: 50px; /* Adjust this value to your preference */
-        max-height: 50px; /* Adjust this value to your preference */
+        max-width: 50px; 
+        max-height: 50px; 
     }
