@@ -106,8 +106,8 @@ const questions = [
         image: "kobra.png"
     },
     {
-        question: "11 Co je to za zvíře?",
-        options: ["Chameleon", "Ještěrka", "Krokodíl", "Varan"],
+        question: "Co je to za zvíře?",
+        options: ["Chameleon", "Ještěrka", "Krokodýl", "Varan"],
         answer: 2,
         difficulty: "lehká",
         image: "krokodil.png"
@@ -197,14 +197,14 @@ const questions = [
         image: "sova.png"
     },
     {
-        question: "11 Co je to za zvíře?",
+        question: "Co je to za zvíře?",
         options: ["Vlk", "Pes", "Kajot", "Šakal"],
         answer: 0,
         difficulty: "lehká",
         image: "vlk.png"
     },
     {
-        question: "11 Co je to za zvíře?",
+        question: "Co je to za zvíře?",
         options: ["Slon", "Kůň", "Zebra", "Žirafa"],
         answer: 3,
         difficulty: "lehká",
@@ -321,7 +321,7 @@ const questions = [
     },
     {
         question: "Co je to za zvíře?",
-        options: ["Chameleon", "Ještěrka", "Krokodíl", "Varan"],
+        options: ["Chameleon", "Ještěrka", "Krokodýl", "Varan"],
         answer: 2,
         difficulty: "střední",
         image: "1_krokodil.png"

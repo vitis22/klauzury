@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>Zvířecí Kvíz</title>
+
+    <style>
+
+    </style>
+
 </head>
-<body>
+
+<body class="background">
 
     <div id="cross-button" style="display:none; position: absolute; top: 10px; right: 10px; cursor: pointer;">
         <img src="images/cross.png" alt="Cross" width="20" height="20">
@@ -14,30 +21,62 @@
 
     <div id="icon-container"></div>
 
-    <button id="icon-button" onclick="showIconSetup()" style="position: absolute; top: 10px; left: 10px;">Zadat hráče</button>
-
-    <div id="change-button" style="display: none; position: absolute; top: 60px; left: 10px;">
-        <button onclick="showIconSetup()">Změnit hráče</button>
+    <div id="change-button" style="position: absolute; top: 60px; left: 15px;">
+        <button id="change-buttonn" onclick="showIconSetup()">Zadat hráče</button>
     </div>
 
     <div id="player-name-container">
         <span id="player-name"></span>
     </div>
 
-<div id="icon-box" class="icon-boxx">
-    <div id="cross-icone" style="display:none;">
-        <img src="images/cross.png" alt="Cross" width="20" height="20">
+
+
+    <div id="icon-box" class="icon-boxx">
+        <div id="cross-icone" style="display:none;">
+            <img src="images/cross.png" alt="Cross" width="20" height="20">
+        </div>
+        <p>Zvol si svoji ikonu</p>
+        <ul id="icon-options" class="options">
+            <img src="images/monkey.png" alt="" class="icon-image" onclick="selectIcon(this)">
+            <img src="images/lion.png" alt="" class="icon-image" onclick="selectIcon(this)">
+            <img src="images/pig.png" alt="" class="icon-image" onclick="selectIcon(this)">
+            <img src="images/tiger.png" alt="" class="icon-image" onclick="selectIcon(this)">
+            <br>
+            <img src="images/elephant.png" alt="" class="icon-image2" onclick="selectIcon(this)">
+            <img src="images/fox.png" alt="" class="icon-image2" onclick="selectIcon(this)">
+            <img src="images/panda2.png" alt="" class="icon-image2" onclick="selectIcon(this)">
+            <img src="images/owl.png" alt="" class="icon-image2" onclick="selectIcon(this)">
+        </ul>
+        <input type="text" id="icon-input" placeholder="Enter icon name">
+        <button onclick="confirmIcon()">Potvrdit</button>
     </div>
-    <p>Select an icon:</p>
-    <ul id="icon-options" class="options">
-        <img src="images/monkey.png" alt="" class="icon-image" onclick="selectIcon(this)">
-        <img src="images/lion.png" alt="" class="icon-image" onclick="selectIcon(this)">
-        <img src="images/pig.png" alt="" class="icon-image" onclick="selectIcon(this)">
-        <img src="images/tiger.png" alt="" class="icon-image" onclick="selectIcon(this)">
-    </ul>
-    <input type="text" id="icon-input" placeholder="Enter icon name">
-    <button onclick="confirmIcon()">Confirm</button>
-</div>
+
+    <div id="popup" class="pop" style="display: none;">
+        <h1>Úvod</h1>
+        <p>Vítej v Zvířecím kvízu! Tento kvíz ti nabídne možnost zdokonalit své znalosti o zvířatech.</p>
+
+        <p>Lehká obtížnost tě zavede do světa poznávání zvířat, kde se dozvíš zajímavosti o jejich vzhledu, životním a
+            prostředí.</p>
+        <p>Střední obtížnost tě přivede k bližšímu poznání různých druhů a jejich charakteristik.</p>
+        <p>Těžká obtížnost je pro ty, kteří chtějí opravdu rozšířit své obzory ohledně zvířat.</p>
+
+        <p>
+            Pokud váháš při odpovědi na otázku, můžeš použít pomocné funkce, avšak s vědomím, že nejsou nekonečně dostupné. Jejich využití stojí peníze, získávané za každou správnou odpověď ve formě jedné mince.</p>
+
+        <p>Takže se připrav se na dobrodružství ve světě zvířat a ukaž, jaké máš znalosti! Pamatuj, že cílem je nejen
+            správně odpovědět, ale také se něco nového naučit.</p>
+
+
+        <button id="card-button">Dobře</button>
+    </div>
+
+    <div id="finish" class="finishh" style="display: none;">
+        <h1>Gratuluji</h1>
+        <p>Gratuluji k vynikajícímu výkonu! Dohrál jsi všechny tři obtížnosti kvízu na 100%, což je skvělý úspěch. Tvé
+            znalosti o zvířatech jsou zjevně velmi působivé. Pokud máš chuť, můžeš samozřejmě pokračovat ve hraní a
+            prohlubovat své znalosti o fascinujícím světě zvířat.</p>
+        <button id="finish-button">Dobře</button>
+    </div>
 
     <div id="start-screen">
         <h1 class="difficulty">Vyberte obtížnost</h1>
@@ -49,24 +88,24 @@
         <button id="hard-button">Těžká</button>
     </div>
 
-<div id="extreme-container" style="display:none;">
-    <p id="extreme-question"></p>
-    <div id="extreme-options">
+    <div id="extreme-container" style="display:none;">
+        <p id="extreme-question"></p>
+        <div id="extreme-options">
 
+        </div>
+        <input type="text" id="extreme-input" placeholder="Enter your answer">
+        <button onclick="checkExtremeAnswer()">Odeslat</button>
     </div>
-    <input type="text" id="extreme-input" placeholder="Enter your answer">
-    <button onclick="checkExtremeAnswer()">Submit</button>
-</div>
 
-<div class="button-extreme">
-    <button id="extreme-button">Extra těžká</button>
-</div>
+    <div class="button-extreme">
+        <button id="extreme-button">Extra těžká</button>
+    </div>
 
     <div id="quiz-container" style="display:none;">
         <h1>Zvířecí Kvíz</h1>
         <p id="question"></p>
         <div id="timer"></div>
-        <img id="question-image" src="" alt="Obrázek otázky"> 
+        <img id="question-image" src="" alt="Obrázek otázky">
         <ul id="options" class="options">
             <li class="option" id="option1"></li>
             <li class="option" id="option2"></li>
@@ -75,13 +114,36 @@
         </ul>
         <button id="next-button">Další otázka</button>
         <div class="button">
-        <button id="reset-button" style="display:none;">Resetovat kvíz</button>
-        <button id="return-to-menu-button" style="display:none;">Vrátit se do hlavní nabýdky</button>
-        <button id="next-difficulty-button" style="display:none;">Další obtížnost</button>
+            <button id="reset-button" style="display:none;">Resetovat kvíz</button>
+            <button id="return-to-menu-button" style="display:none;">Vrátit se do hlavní nabídky</button>
+            <button id="next-difficulty-button" style="display:none;">Další obtížnost</button>
         </div>
     </div>
-    <script src="otazky.js"></script> 
+
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <span class="close-btn" onclick="closeCustomModal()">Dobře</span>
+        </div>
+    </div>
+
+    <div id="coins-display">
+        Mince: 0
+    </div>
+
+
+    <div id="coinsCostDisplay"></div>
+
+    <button id="fiftyFiftyButton" style="display:none;">50/50</button>
+    <button id="pauseButton" style="display:none;">Stopnutí času</button>
+    <button id="skipButton">Přeskočit otázku</button>
+
+
+
+
+    <script src="otazky.js"></script>
     <script src="otazky_extreme.js"></script>
-    <script src="javascript.js"></script>    
+    <script src="javascript.js"></script>
 </body>
+
 </html>

@@ -34,9 +34,12 @@ const extremeOptions = document.getElementById("extreme-options");
 const iconInput = document.getElementById("icon-input");
 const iconBox = document.getElementById("icon-box");
 const iconButton = document.getElementById("icon-button");
-const changeButton = document.getElementById("change-button");
+const iconContainer = document.getElementById("icon-container")
+const changeButton = document.getElementById("change-buttonn");
 const crossIcone = document.getElementById("cross-icone");
 const timerElement = document.getElementById("timer");
+const cardPop = document.getElementById("popup")
+const cardButton = document.getElementById("card-button")
 
 scoreLehka = parseInt(localStorage.getItem('scoreLehka')) || 0;
 scoreStredni = parseInt(localStorage.getItem('scoreStredni')) || 0;
@@ -46,9 +49,50 @@ highestScoreLehka = parseInt(localStorage.getItem('highestScoreLehka')) || 0;
 highestScoreStredni = parseInt(localStorage.getItem('highestScoreStredni')) || 0;
 highestScoreTezka = parseInt(localStorage.getItem('highestScoreTezka')) || 0;
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Check if the flag is set in localStorage
+    let popupShown = localStorage.getItem("popupShown");
+
+    // If the flag is not set, show the popup
+    if (!popupShown) {
+        cardPop.style.display = "block";
+    }
+
+    // Add a click event listener to the button
+    document.getElementById("card-button").addEventListener("click", function () {
+        // Set the flag in localStorage to indicate that the popup has been shown
+        localStorage.setItem("popupShown", "true");
+
+        // Hide the popup
+        cardPop.style.display = "none";
+    });
+});
+
+let count = 0
+
+count = parseInt(localStorage.getItem('count')) || 0;
+
+function finishCard() {
+    // Check if count is greater than 1 before proceeding
+    if (count < 1) {
+        if (highestScoreLehka === 100 && highestScoreStredni === 100 && highestScoreTezka === 100) {
+            // Display the "finish" div
+            document.getElementById('finish').style.display = 'block';
+        }
+
+        // You can also add an event listener to the "Dobře" button to hide the div again if needed
+        document.getElementById('finish-button').addEventListener('click', function () {
+            document.getElementById('finish').style.display = 'none';
+            count++;
+            localStorage.setItem('count', count);
+        });
+    }
+}
+
 crossIcone.addEventListener("click", function () {
     iconBox.style.display = "none";
     changeButton.style.display = "block";
+    iconContainer.style.display = "block";
 });
 
 crossButton.addEventListener("click", () => {
@@ -59,9 +103,29 @@ crossButton.addEventListener("click", () => {
     extremeContainer.style.display = "none";
     changeButton.style.display = "block"
     crossButton.style.display = "none";
+    coinsDisplay.style.display = "block";
+    pauseButton.style.display = "none";
+    fiftyFiftyButton.style.display = "none"
+    skipButton.style.display = "none";
     stopTimer();
     resetTimer();
+    randomQuestion();
 });
+
+// Function to set the button text and save it in localStorage
+function setButtonText(text) {
+    let button = document.getElementById("change-buttonn");
+    button.innerHTML = text;
+    localStorage.setItem("buttonText", text);
+}
+
+// Function to get the button text from localStorage on page load
+function getButtonText() {
+    let savedText = localStorage.getItem("buttonText");
+    if (savedText) {
+        setButtonText(savedText);
+    }
+}
 
 /*
 připravuje uživatelské rozhraní pro výběr nové ikony tím 
@@ -73,12 +137,18 @@ function showIconSetup() {
 
     iconInput.value = "";
 
+    setButtonText("Změnit hráče");
+
     iconBox.style.display = "block";
     iconButton.style.display = "none";
-    changeButton.style.display = "none";
+    changeButton.style.display = "block";
     crossIcone.style.display = "block";
+    iconContainer.style.display = "none";
     clearIconSelection();
 }
+
+// Call getButtonText on page load
+window.onload = getButtonText;
 
 // Ruší výběr ikon tím, že resetuje styly všech obrázků v rámci určeného kontejneru
 function clearIconSelection() {
@@ -87,12 +157,41 @@ function clearIconSelection() {
 }
 
 function selectIcon(clickedImage) {
-    const iconImages = document.querySelectorAll("#icon-options img");
-    iconImages.forEach(img => img.style.border = "none");
+    if (clickedImage.classList.contains('icon-image1')) {
+        // Show an alert indicating that the user should choose another icon
+        showAlert("Please choose another icon.");
+    } else {
+        const iconImages = document.querySelectorAll("#icon-options img");
+        iconImages.forEach(img => img.style.border = "none");
 
-    selectedIcon = clickedImage.src;
-    clickedImage.style.border = "2px solid blue";
+        selectedIcon = clickedImage.src;
+        clickedImage.style.border = "2px solid blue";
+    }
 }
+
+
+/*
+if (highestScoreLehka >= 50) {
+    // Select all elements with the class "icon-image"
+    let iconImages = document.querySelectorAll('.icon-image1');
+
+    // Loop through each image and hide it
+    iconImages.forEach(function (image) {
+        image.style.display = 'none';
+    });
+}
+
+if (highestScoreLehka < 50) {
+    // Select all elements with the class "icon-image2"
+    let iconImages = document.querySelectorAll('.icon-image2');
+
+    // Loop through each image and hide it
+    iconImages.forEach(function (image) {
+        image.style.display = 'none';
+    });
+}
+*/
+
 
 function confirmIcon() {
     playerName = iconInput.value;
@@ -107,7 +206,13 @@ function confirmIcon() {
         highestScoreStredni = 0;
         highestScoreTezka = 0;
 
+        coins = 0;
+        count = 0;
+
         createPlayerIcon(playerName, selectedIcon);
+
+        localStorage.setItem('coins', coins);
+        localStorage.setItem('count', count);
 
         localStorage.setItem('selectedIcon', selectedIcon);
         localStorage.setItem('playerName', playerName);
@@ -128,9 +233,8 @@ function confirmIcon() {
         iconBox.style.display = "none";
         selectedIcon = "";
 
-        document.getElementById("start-button").disabled = false;
     } else {
-        alert("Please select an icon and enter a name for your player.");
+        showAlert("Před zahajením kvízu musíte prvně zadat svého hráče a jméno.");
     }
 }
 
@@ -170,9 +274,6 @@ function createPlayerIcon(name, iconData) {
 
     localStorage.setItem('selectedIcon', iconData);
     localStorage.setItem('playerName', name);
-
-    iconButton.style.display = "none";
-    changeButton.style.display = "block";
 }
 
 // Funkce pro promíchání pole otázek
@@ -209,6 +310,18 @@ mixedQuestions.forEach(question => {
 // Vytvoří pole finalQuestions obsahující omezený počet otázek pro každou obtížnost
 const finalQuestions = Object.values(limitedQuestions).flat();
 
+const customModal = document.getElementById('customModal');
+const modalMessage = document.getElementById('modalMessage');
+
+function showAlert(message) {
+    modalMessage.textContent = message;
+    customModal.style.display = 'flex';
+}
+
+function closeCustomModal() {
+    customModal.style.display = 'none';
+}
+
 startScreen.addEventListener("click", (event) => {
     if (event.target.tagName === "BUTTON") {
         const clickedDifficulty = event.target.textContent.toLowerCase();
@@ -224,14 +337,17 @@ startScreen.addEventListener("click", (event) => {
                 selectedDifficulty = clickedDifficulty;
                 startScreen.style.display = "none";
                 quizContainer.style.display = "block";
+                pauseButton.style.display = "block";
+                fiftyFiftyButton.style.display = "block"
+                skipButton.style.display = "block";
                 extremeButton.style.display = "none";
                 resetQuiz();
                 startTimer();
             } else {
-                alert("Pro odemknutí další obtížnosti musíš v předchozí obtížnosti dosáhnout alespoň 50% skóre.");
+                showAlert("Pro odemknutí další obtížnosti musíš v předchozí obtížnosti dosáhnout alespoň 50% skóre.");
             }
         } else {
-            alert("Zadej svoji ikonu a jméno než začneš hrát.");
+            showAlert("Zadej svoji ikonu a jméno než začneš hrát.");
         }
     }
 });
@@ -240,6 +356,9 @@ resetButton.addEventListener("click", () => {
     resetQuiz();
     startTimer();
     resetTimer();
+    pauseButton.style.display = "block";
+    fiftyFiftyButton.style.display = "block"
+    skipButton.style.display = "block";
 });
 
 nextDifficultyButton.addEventListener("click", () => {
@@ -249,9 +368,13 @@ nextDifficultyButton.addEventListener("click", () => {
 
     startScreen.style.display = "none";
     quizContainer.style.display = "block";
+    pauseButton.style.display = "block";
+    fiftyFiftyButton.style.display = "block"
+    skipButton.style.display = "block";
 
-    resetQuiz(); 
-    loadQuestion(); 
+
+    resetQuiz();
+    loadQuestion();
     resetTimer();
     startTimer();
 });
@@ -261,20 +384,36 @@ returnToMenuButton.addEventListener("click", () => {
     startScreen.style.display = "block";
     quizContainer.style.display = "none";
     extremeButton.style.display = "block"
+    pauseButton.style.display = "none";
+    fiftyFiftyButton.style.display = "none"
+    skipButton.style.display = "none";
     stopTimer();
     resetTimer();
+    finishCard();
 });
 
+
+let isTimerRunning = false;
+
 function startTimer() {
-    timer = setInterval(() => {
-        elapsedTime++;
-        updateTimerDisplay();
-    }, 1000);
+    // Check if the timer is already running
+    if (!isTimerRunning) {
+        timer = setInterval(() => {
+            elapsedTime++;
+            updateTimerDisplay();
+        }, 1000);
+
+        isTimerRunning = true;
+    }
 }
 
 function stopTimer() {
+    console.log("Before clearInterval:", timer);
     clearInterval(timer);
+    console.log("After clearInterval:", timer);
+    isTimerRunning = false;
 }
+
 
 function updateTimerDisplay() {
     const minutes = Math.floor(elapsedTime / 60);
@@ -285,7 +424,22 @@ function updateTimerDisplay() {
 function resetTimer() {
     elapsedTime = 0;
     updateTimerDisplay();
+    isTimerRunning = false;  // Reset the running state
 }
+
+const pauseButton = document.getElementById("pauseButton");
+
+pauseButton.addEventListener("click", () => {
+    if (coins >= 5) {
+        stopTimer();
+        coins -= 5;
+        coinsDisplay.textContent = `Mince: ${coins}`;
+        localStorage.setItem('coins', coins);
+    } else {
+        showAlert("Na to aby jste mohli použít funkci stopnutí času tak musíte mít 5 mincí.");
+    }
+});
+
 
 function resetQuiz() {
     currentQuestion = 0;
@@ -293,6 +447,72 @@ function resetQuiz() {
     options.forEach(option => option.classList.remove('shake'));
     loadQuestion();
 }
+
+const skipButton = document.getElementById("skipButton");
+
+
+skipButton.addEventListener("click", () => {
+    if (coins >= 10) {
+        const correctOptionIndex = finalQuestions[currentQuestion].answer;
+
+        // Simulate a click on the correct option
+        simulateOptionClick(correctOptionIndex);
+
+        // Increase the current question index to move to the next question
+        currentQuestion++;
+
+        // Reset the options remaining count
+        optionsRemaining = 4; // Assuming there are initially 4 options
+
+        // Check if there are more questions remaining
+        if (currentQuestion < finalQuestions.length) {
+            loadQuestion();
+        } else {
+            // No more questions remaining, show the result
+            showResult();
+        }
+
+        coins -= 10;
+        coinsDisplay.textContent = `Mince: ${coins}`;
+        localStorage.setItem('coins', coins);
+    } else {
+        showAlert("Na to aby jste mohli použít funkci přeskočit otázku musíte mít 5 mincí.");
+    }
+});
+
+// Function to simulate a click on the option at a given index
+function simulateOptionClick(index) {
+    const selectedOption = options[index];
+
+    // Trigger a click event on the selected option
+    const clickEvent = new Event('click');
+    selectedOption.dispatchEvent(clickEvent);
+}
+
+const buttons = [
+    { id: "fiftyFiftyButton", cost: 5 }, // You can adjust the cost for each button as needed
+    { id: "pauseButton", cost: 5 },
+    { id: "skipButton", cost: 10 }
+];
+
+const coinsCostDisplay = document.getElementById("coinsCostDisplay");
+
+function handleButtonHover(button) {
+    const buttonElement = document.getElementById(button.id);
+
+    buttonElement.addEventListener("mouseover", () => {
+        coinsCostDisplay.textContent = `Stojí ${button.cost} mincí`;
+    });
+
+    buttonElement.addEventListener("mouseout", () => {
+        coinsCostDisplay.textContent = "";
+    });
+}
+
+// Iterate through the buttons and set up the hover behavior
+buttons.forEach(button => {
+    handleButtonHover(button);
+});
 
 function loadQuestion() {
     nextButton.style.display = "none";
@@ -347,20 +567,77 @@ function updateQuestion(questionData) {
     updateOptions(questionData.options);
 }
 
+let optionsRemaining = 4; // Assuming there are initially 4 options
+
+let coins = 0;
+coins = parseInt(localStorage.getItem('coins')) || 0;
+
+// Add this line to your existing code to create an HTML element for displaying coins
+const coinsDisplay = document.getElementById("coins-display");
+
+// Update the updateOptions function to show/hide the coins display
 function updateOptions(currentOptions) {
+    // Reset the number of remaining options
+    optionsRemaining = currentOptions.length;
+
+    // Display or hide options based on the current question
     for (let i = 0; i < options.length; i++) {
         if (i < currentOptions.length) {
-            // Aktualizuje text a vzhled možnosti odpovědi
             options[i].textContent = currentOptions[i];
             options[i].classList.remove("correct", "incorrect");
             options[i].addEventListener("click", checkAnswer);
             options[i].style.display = "block";
         } else {
-            // Skryje možnost odpovědi, pokud je index větší než délka aktuálních možností
             options[i].style.display = "none";
         }
     }
+
+    // Update the coins display
+    coinsDisplay.textContent = `Mince: ${coins}`;
+    localStorage.setItem('coins', coins);
 }
+
+
+function useFiftyFifty() {
+    // Check if the player has at least 5 coins
+    if (coins >= 5) {
+        // Check if the 50/50 can be used (there are more than 2 options remaining)
+        if (optionsRemaining > 2) {
+            const correctOptionIndex = finalQuestions[currentQuestion].answer;
+            const incorrectOptions = Array.from({ length: optionsRemaining }, (_, i) => i)
+                .filter(index => index !== correctOptionIndex);
+
+            // Randomly select two incorrect options to remove
+            const optionsToRemove = getRandomElements(incorrectOptions, 2);
+
+            // Hide the selected incorrect options
+            optionsToRemove.forEach(index => {
+                options[index].style.display = "none";
+                optionsRemaining--;
+            });
+
+            // Deduct 5 coins from the player
+            coins -= 5;
+            coinsDisplay.textContent = `Mince: ${coins}`;
+            localStorage.setItem('coins', coins);
+        }
+    } else {
+        showAlert("Na to aby jste mohli použít funkci 50/50 tak musíte mít 5 mincí.");
+    }
+}
+
+
+// Helper function to get random elements from an array
+function getRandomElements(arr, num) {
+    const shuffled = arr.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, num);
+}
+
+// Assuming you have a button in your HTML with id "fiftyFiftyButton"
+const fiftyFiftyButton = document.getElementById("fiftyFiftyButton");
+
+// Add a click event listener to the 50/50 button
+fiftyFiftyButton.addEventListener("click", useFiftyFifty);
 
 
 function checkAnswer(event) {
@@ -370,7 +647,7 @@ function checkAnswer(event) {
 
     for (let i = 0; i < options.length; i++) {
         options[i].removeEventListener("click", checkAnswer);
-        options[i].classList.remove("shake"); 
+        options[i].classList.remove("shake");
 
         if (i === correctOptionIndex) {
             options[i].classList.add("correct");
@@ -383,6 +660,9 @@ function checkAnswer(event) {
 
     if (selectedOptionIndex === finalQuestions[currentQuestion].answer) {
         score++;
+        coins++;
+        coinsDisplay.textContent = `Mince: ${coins}`;
+        localStorage.setItem('coins', coins);
         selectedOption.classList.add("correct");
     } else {
         selectedOption.classList.add("incorrect");
@@ -454,6 +734,10 @@ function showResult() {
     if (timerElement.style.display !== "none") {
         timerElement.style.display = "none";
     }
+
+    pauseButton.style.display = "none";
+    fiftyFiftyButton.style.display = "none"
+    skipButton.style.display = "none";
 }
 
 loadQuestion();
@@ -461,6 +745,7 @@ loadQuestion();
 nextButton.addEventListener("click", () => {
     currentQuestion++;
     loadQuestion();
+    startTimer();
 });
 
 // Funkce pro zobrazení extrémní obtížnost
@@ -472,14 +757,17 @@ function showExtremeMode() {
     if (highestScoreLehka >= 50 && highestScoreTezka >= 50) {
         extremeButton.style.display = "none";
         startScreen.style.display = "none";
+        pauseButton.style.display = "none";
+        fiftyFiftyButton.style.display = "none"
         quizContainer.style.display = "none";
         extremeContainer.style.display = "block";
         timerElement.style.display = "block";
         changeButton.style.display = "none"
+        coinsDisplay.style.display = "none";
 
         loadExtremeQuestion();
     } else {
-        alert("Pro odemknutí Extra těžké obtížnosti je třeba dosáhnout alespoň 50% skóre v každé obtížnosti.");
+        showAlert("Pro odemknutí Extra těžké obtížnosti je třeba dosáhnout alespoň 50% skóre v každé obtížnosti.");
     }
 }
 
@@ -512,8 +800,8 @@ function displayExtremeOptions(options) {
         imgElement.alt = `Option ${index + 1}`;
 
         if (index === 0) {
-            imgElement.style.width = "200px"; 
-            imgElement.style.height = "200px"; 
+            imgElement.style.width = "200px";
+            imgElement.style.height = "200px";
             imgElement.style.padding = "5px";
             imgElement.style.objectFit;
         }
@@ -533,6 +821,7 @@ function checkExtremeAnswer() {
         extremeButton.style.display = "block";
         changeButton.style.display = "block"
         extremeContainer.style.display = "none";
+        coinsDisplay.style.display = "block";
     } else {
         wrongAnswersCount++;
         // Kontrola zda hráč zadal tři špatné odpovědi pokud ano zobrazí se další obrázek jako nápověda
@@ -574,8 +863,8 @@ function displayNextExtremePicture() {
         imgElement.src = `images/${currentExtremePicture}`;
         imgElement.alt = `Hint ${currentClueIndex + 1}`;
 
-        imgElement.style.width = "200px"; 
-        imgElement.style.height = "200px"; 
+        imgElement.style.width = "200px";
+        imgElement.style.height = "200px";
         imgElement.style.padding = "5px";
 
         pictureContainer.appendChild(imgElement);
@@ -587,5 +876,6 @@ function getExtremeModeCorrectAnswer() {
 
     return currentExtremeQuestion.correctAnswer;
 }
+
 
 extremeButton.addEventListener("click", showExtremeMode);
